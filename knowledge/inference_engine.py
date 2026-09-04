@@ -1,6 +1,6 @@
 # knowledge/inference_engine.py
-from facts import Fact
-from rules import Rule
+from knowledge.facts import Fact
+from knowledge.rules import Rule
 
 class InferenceEngine:
     """
@@ -48,7 +48,7 @@ class InferenceEngine:
                 break
 
         # Bóc tách kết quả Độ ưu tiên (Priority) và Mức độ nguy cơ (Risk) cuối cùng
-        final_priority = "NORMAL"  # Mặc định nếu không kích hoạt Rule ưu tiên nào
+        final_priority = "LOW"  # Mặc định nếu không kích hoạt Rule ưu tiên nào
         final_risk = "LOW"
 
         for fact in known_facts:

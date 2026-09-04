@@ -1,5 +1,5 @@
 # knowledge/rules.py
-from facts import Fact
+from knowledge.facts import Fact
 
 class Rule:
     def __init__(self, rule_id: str, conditions: list[Fact], consequence: Fact, description: str = ""):
