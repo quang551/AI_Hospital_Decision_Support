@@ -12,19 +12,82 @@ class Scheduler:
     def create_schedule(self, doctors, rooms, time_slots):
         self.schedules = []
 
-        doctor_index = 0
-        room_index = 0
+        if not doctors or not rooms or not time_slots:
+            return self.schedules
+
+        # Chia bác sĩ theo nhóm
+        emergency_doctors = [
+            doctor for doctor in doctors
+            if str(doctor.specialization).strip().lower() == "emergency"
+        ]
+
+        general_doctors = [
+            doctor for doctor in doctors
+            if str(doctor.specialization).strip().lower()
+            == "general medicine"
+        ]
+
+        # Chia phòng theo nhóm
+        emergency_rooms = [
+            room for room in rooms
+            if str(room.department).strip().lower() == "emergency"
+        ]
+
+        general_rooms = [
+            room for room in rooms
+            if str(room.department).strip().lower()
+            == "general medicine"
+        ]
+
+        emergency_doctor_index = 0
+        emergency_room_index = 0
+
+        general_doctor_index = 0
+        general_room_index = 0
+
         time_index = 0
 
         while not self.queue.is_empty():
             patient = self.queue.get_next_patient()
 
-            if not doctors or not rooms or not time_slots:
-                break
+            priority = str(
+                getattr(patient, "priority", "LOW")
+            ).strip().upper()
 
-            doctor = doctors[doctor_index % len(doctors)]
-            room = rooms[room_index % len(rooms)]
+            # CRITICAL và HIGH → Emergency
+            if priority in ("CRITICAL", "HIGH"):
+                if not emergency_doctors or not emergency_rooms:
+                    continue
+
+                doctor = emergency_doctors[
+                    emergency_doctor_index % len(emergency_doctors)
+                ]
+
+                room = emergency_rooms[
+                    emergency_room_index % len(emergency_rooms)
+                ]
+
+                emergency_doctor_index += 1
+                emergency_room_index += 1
+
+            # MEDIUM và LOW → General Medicine
+            else:
+                if not general_doctors or not general_rooms:
+                    continue
+
+                doctor = general_doctors[
+                    general_doctor_index % len(general_doctors)
+                ]
+
+                room = general_rooms[
+                    general_room_index % len(general_rooms)
+                ]
+
+                general_doctor_index += 1
+                general_room_index += 1
+
             time = time_slots[time_index % len(time_slots)]
+            time_index += 1
 
             schedule = {
                 "patient": patient,
@@ -34,9 +97,5 @@ class Scheduler:
             }
 
             self.schedules.append(schedule)
-
-            doctor_index += 1
-            room_index += 1
-            time_index += 1
 
         return self.schedules

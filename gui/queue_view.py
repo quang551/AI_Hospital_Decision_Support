@@ -281,6 +281,10 @@ class QueueView(QWidget):
         kpi_layout = QHBoxLayout()
         kpi_layout.setSpacing(16)
 
+        # ----------------------------------------------------
+        # TOTAL
+        # ----------------------------------------------------
+
         self.card_total = self.create_summary_card(
             "TOTAL QUEUE",
             "0",
@@ -288,6 +292,10 @@ class QueueView(QWidget):
             TEXT_PRIMARY,
             PRIMARY_BLUE
         )
+
+        # ----------------------------------------------------
+        # CRITICAL
+        # ----------------------------------------------------
 
         self.card_critical = self.create_summary_card(
             "CRITICAL",
@@ -297,6 +305,10 @@ class QueueView(QWidget):
             COLOR_CRITICAL_TEXT
         )
 
+        # ----------------------------------------------------
+        # HIGH
+        # ----------------------------------------------------
+
         self.card_high = self.create_summary_card(
             "HIGH",
             "0",
@@ -305,13 +317,33 @@ class QueueView(QWidget):
             COLOR_HIGH_TEXT
         )
 
-        self.card_normal = self.create_summary_card(
-            "MEDIUM / LOW",
+        # ----------------------------------------------------
+        # MEDIUM
+        # ----------------------------------------------------
+
+        self.card_medium = self.create_summary_card(
+            "MEDIUM",
             "0",
-            "Normal priority",
+            "Medium priority",
+            COLOR_MEDIUM_TEXT,
+            COLOR_MEDIUM_TEXT
+        )
+
+        # ----------------------------------------------------
+        # LOW
+        # ----------------------------------------------------
+
+        self.card_low = self.create_summary_card(
+            "LOW",
+            "0",
+            "Low priority",
             COLOR_LOW_TEXT,
             COLOR_LOW_TEXT
         )
+
+        # ----------------------------------------------------
+        # Add cards
+        # ----------------------------------------------------
 
         kpi_layout.addWidget(
             self.card_total
@@ -326,7 +358,11 @@ class QueueView(QWidget):
         )
 
         kpi_layout.addWidget(
-            self.card_normal
+            self.card_medium
+        )
+
+        kpi_layout.addWidget(
+            self.card_low
         )
 
         main_layout.addLayout(
@@ -804,9 +840,14 @@ class QueueView(QWidget):
             0
         )
 
+        # ----------------------------------------------------
+        # Priority counters
+        # ----------------------------------------------------
+
         critical_count = 0
         high_count = 0
-        normal_count = 0
+        medium_count = 0
+        low_count = 0
 
         # ----------------------------------------------------
         # Sort priority
@@ -862,9 +903,13 @@ class QueueView(QWidget):
 
                 high_count += 1
 
+            elif priority_upper == "MEDIUM":
+
+                medium_count += 1
+
             else:
 
-                normal_count += 1
+                low_count += 1
 
             # =================================================
             # NO.
@@ -1058,10 +1103,16 @@ class QueueView(QWidget):
             str(high_count)
         )
 
-        self.card_normal.findChildren(
+        self.card_medium.findChildren(
             QLabel
         )[1].setText(
-            str(normal_count)
+            str(medium_count)
+        )
+
+        self.card_low.findChildren(
+            QLabel
+        )[1].setText(
+            str(low_count)
         )
 
         # ====================================================
