@@ -6,9 +6,9 @@ import unittest
 #đường dẫn để Python nhận diện thư mục knowledge/
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from facts import Fact, extract_facts_from_patient
-from rules import get_default_knowledge_base
-from inference_engine import InferenceEngine
+from knowledge.facts import Fact, extract_facts_from_patient
+from knowledge.rules import get_default_knowledge_base
+from knowledge.inference_engine import InferenceEngine
 
 
 class MockPatient:
